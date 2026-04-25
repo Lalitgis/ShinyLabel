@@ -2,8 +2,9 @@
 
 **A fully R-native image annotation tool for YOLO object detection.**  
 Built as an alternative to LabelImg — no Python, no external tools, runs entirely in R + Shiny.
-
----
+<p align="center">
+  <img src="logo.png" width="300"/>
+</p>
 
 ## Features
 
