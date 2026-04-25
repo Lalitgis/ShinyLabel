@@ -2,9 +2,8 @@ Package: shinylabel
 Type: Package
 Title: R-Native Image Annotation Tool for YOLO Object Detection
 Version: 0.1.0
-Authors@R: "Lalit BC",
-email = "[lalitiaas@gmail.com]",
-role = c("aut", "cre"))
+Authors@R: person ("Lalit BC", role = c("aut", "cre"),
+email = "(lalitiaas@gmail.com)"
 Description: Provides an interactive 'Shiny'-based interface for image annotation
 with support for drawing bounding boxes, managing multi-annotator workflows,
 and storing annotations in a 'SQLite' database. Includes utilities to export
@@ -35,5 +34,5 @@ scales (>= 1.2.0)
 Suggests:
 testthat (>= 3.0.0)
 Config/testthat/edition: 3
-GitHub: https://github.com/Lalitgis/ShinyLabel
-Issue: https://www.github.com/Lalitgis/ShinyLabel/issue
+URL: https://github.com/Lalitgis/ShinyLabel
+ReportBug: https://www.github.com/Lalitgis/ShinyLabel/issue
