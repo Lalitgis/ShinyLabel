@@ -1,0 +1,39 @@
+{
+  "info": {
+    "description": "ShinyLabel COCO Export",
+    "version": "1.0",
+    "year": 2026,
+    "date_created": "2026/04/25"
+  },
+  "licenses": [],
+  "categories": [
+    {
+      "id": 1,
+      "name": "drone",
+      "supercategory": "object"
+    }
+  ],
+  "images": [
+    {
+      "id": 1,
+      "file_name": "drone.jpeg",
+      "width": 1280,
+      "height": 698
+    }
+  ],
+  "annotations": [
+    {
+      "id": 1,
+      "image_id": 1,
+      "category_id": 1,
+      "bbox": [
+        19,
+        68,
+        394,
+        211
+      ],
+      "area": 83134,
+      "iscrowd": 0
+    }
+  ]
+}

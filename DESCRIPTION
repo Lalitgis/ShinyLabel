@@ -1,0 +1,31 @@
+Package: shinylabel
+Title: R-Native Image Annotation Tool for YOLO Object Detection
+Version: 0.1.0
+Authors@R: person("ShinyLabel", "Author", email = "author@example.com", role = c("aut", "cre"))
+Description: A Shiny-based image annotation tool providing bounding box drawing,
+    multi-annotator team support, SQLite-backed storage, and direct YOLO/COCO export.
+    Designed as a fully R-native alternative to LabelImg for YOLO-based object detection workflows.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Depends:
+    R (>= 4.1.0)
+Imports:
+    shiny (>= 1.7.0),
+    bslib (>= 0.5.0),
+    DBI (>= 1.1.0),
+    RSQLite (>= 2.2.4),
+    magick (>= 2.7.0),
+    shinyFiles (>= 0.9.0),
+    shinyjs (>= 2.1.0),
+    jsonlite (>= 1.8.0),
+    ggplot2 (>= 3.4.0),
+    DT (>= 0.27),
+    dplyr (>= 1.1.0),
+    lubridate (>= 1.9.0),
+    zip (>= 2.3.0),
+    yaml (>= 2.3.0),
+    scales (>= 1.2.0)
+Suggests:
+    testthat (>= 3.0.0)
