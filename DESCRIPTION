@@ -2,8 +2,8 @@ Package: shinylabel
 Type: Package
 Title: R-Native Image Annotation Tool for YOLO Object Detection
 Version: 0.1.0
-Authors@R: person ("Lalit BC", role = c("aut", "cre"),
-email = "lalitiaas@gmail.com)"
+Authors@R: person ("Lalit BC", email = "lalitiaas@gmail.com", 
+           role = c("aut", "cre"))
 Description: A Shiny-based image annotation tool supporting bounding boxes,
     multi-user workflows, and YOLO format export.
 License: MIT + file LICENSE
