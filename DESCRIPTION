@@ -3,12 +3,9 @@ Type: Package
 Title: R-Native Image Annotation Tool for YOLO Object Detection
 Version: 0.1.0
 Authors@R: person ("Lalit BC", role = c("aut", "cre"),
-email = "(lalitiaas@gmail.com)"
-Description: Provides an interactive 'Shiny'-based interface for image annotation
-with support for drawing bounding boxes, managing multi-annotator workflows,
-and storing annotations in a 'SQLite' database. Includes utilities to export
-annotations in 'YOLO' and 'COCO' formats. Designed as a fully R-native
-alternative to tools such as 'LabelImg' for object detection workflows.
+email = "lalitiaas@gmail.com)"
+Description: A Shiny-based image annotation tool supporting bounding boxes,
+    multi-user workflows, and YOLO format export.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
