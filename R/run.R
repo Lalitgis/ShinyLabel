@@ -16,32 +16,39 @@
 #'   run_shinylabel()
 #'
 #'   # Team use (shared network path)
-#'   run_shinylabel(db_path = "//server/shared/project/annotations.db",
-#'                  host = "0.0.0.0", port = 3838)
+#'   run_shinylabel(
+#'     db_path = "//server/shared/project/annotations.db",
+#'     host = "0.0.0.0",
+#'     port = 3838
+#'   )
 #' }
 #' @export
 run_shinylabel <- function(
-    db_path        = "shinylabel.db",
-    host           = "127.0.0.1",
-    port           = NULL,
-    launch.browser = TRUE
+  db_path        = "shinylabel.db",
+  host           = "127.0.0.1",
+  port           = NULL,
+  launch.browser = TRUE
 ) {
-  # Add www/ folder to resource path so CSS/JS are served
+  # Locate www directory inside installed package
   www_dir <- system.file("www", package = "shinylabel")
+
   if (!nzchar(www_dir)) {
-    # Development mode: use local path
-    www_dir <- file.path(dirname(dirname(system.file(package = "shinylabel"))),
-                         "shinylabel", "www")
+    stop("Could not find 'www' directory. Please reinstall the package.",
+         call. = FALSE)
   }
+
+  # Register static resource paths
   shiny::addResourcePath("css", file.path(www_dir, "css"))
   shiny::addResourcePath("js",  file.path(www_dir, "js"))
   shiny::addResourcePath("img", file.path(www_dir, "img"))
 
+  # Create Shiny app
   app <- shiny::shinyApp(
     ui     = sl_ui(),
     server = sl_server(db_path = db_path)
   )
 
+  # Run app
   shiny::runApp(
     app,
     host           = host,
