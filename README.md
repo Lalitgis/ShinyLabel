@@ -176,13 +176,6 @@ ShinyLabel/
     └── figures/
         └── logo.png
 ```
-
-> **Why `inst/app/`?**  
-> R only ships files inside `inst/` when a package is installed.  
-> Placing `app.R` and `www/` at the repo root works for cloned repos but  
-> breaks `system.file()` lookups after `install_github()`. Moving them  
-> inside `inst/app/` fixes this permanently.
-
 ---
 
 ## Road to `yolor` package integration
