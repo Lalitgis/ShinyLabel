@@ -134,6 +134,15 @@ sl_server <- function(db_path = "shinylabel.db") {
 
       withProgress(message = "Loading images…", value = 0, {
         for (i in seq_len(nrow(files))) {
+          # Warn if image is very large — will load slowly via base64
+          file_mb <- file.info(files$datapath[i])$size / 1024^2
+          if (file_mb > 20) {
+            showNotification(
+              paste0(files$name[i], " is ", round(file_mb, 1),
+                     "MB — large images may load slowly."),
+              type = "warning", duration = 6)
+          }
+
           info <- sl_image_info(files$datapath[i])
           if (info$width == 0L) next
           dest <- file.path(dest_d, files$name[i])
@@ -363,7 +372,8 @@ sl_server <- function(db_path = "shinylabel.db") {
     # which triggers the "Save As" dialog on all browsers.
     # ════════════════════════════════════════════════════════════════════════
 
-    exports_dir <- file.path(app_dir, "www", "exports")
+    on_cloud <- nzchar(Sys.getenv("SHINYAPPS_TOKEN")) || nzchar(Sys.getenv("SHINY_HOST"))
+    exports_dir <- if (on_cloud) file.path(tempdir(), "sl_exports") else file.path(app_dir, "www", "exports")
     dir.create(exports_dir, showWarnings = FALSE, recursive = TRUE)
     shiny::addResourcePath("exports", exports_dir)
 
