@@ -2,35 +2,56 @@
 
 **A fully R-native image annotation tool for YOLO object detection.**  
 Built as an alternative to LabelImg — no Python, no external tools, runs entirely in R + Shiny.
+
 <p align="center">
-  <img src="logo.png" width="180"/>
+  <img src="man/figures/logo.png" alt="ShinyLabel logo" width="180"/>
 </p>
 
-<h1 align="center">ShinyLabel</h1>
-<p align="center">R-Native Image Annotation Tool for YOLO</p>
+<p align="center">
+  <a href="https://github.com/Lalitgis/ShinyLabel/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"/></a>
+  <a href="https://github.com/Lalitgis/ShinyLabel/issues"><img src="https://img.shields.io/github/issues/Lalitgis/ShinyLabel" alt="GitHub issues"/></a>
+  <img src="https://img.shields.io/badge/R-%3E%3D%204.1.0-276DC3" alt="R >= 4.1.0"/>
+</p>
+
+---
 
 ## Features
 
 | Feature | Details |
-|---|---|
+|---------|---------|
 | **Draw** | Click-drag bounding boxes on any image |
 | **Edit** | Select, move, resize (8 handles), delete boxes |
 | **Undo** | Full undo stack (Ctrl+Z) |
-| **Classes** | Dynamic class management with color coding |
-| **Load** | Upload files, point to local folder, or load from URL |
+| **Classes** | Dynamic class management with colour coding |
+| **Load** | Upload files, point to a local folder, or load from URL |
 | **Team** | Multi-annotator with username tracking |
 | **Auto-save** | Annotations saved automatically on image navigation |
-| **Storage** | SQLite (WAL mode) — serverless, concurrent, zero install |
+| **Storage** | SQLite (WAL mode) — serverless, concurrent, zero extra install |
 | **Export** | YOLO Ultralytics `.txt` + `data.yaml` + COCO JSON |
 | **Dashboard** | Progress stats, boxes per class, annotator breakdown |
 
 ---
 
-## Quick Start
+## Installation
 
-### Option 1: Run directly (no install needed)
+### Option 1 — install from GitHub (recommended)
+
 ```r
-# Install dependencies first
+# install.packages("devtools")  # if you don't have it yet
+devtools::install_github("Lalitgis/ShinyLabel")
+```
+
+Then launch the app:
+
+```r
+library(shinylabel)
+run_shinylabel()
+```
+
+### Option 2 — run directly from a cloned repo (no install needed)
+
+```r
+# Clone the repo first, then in R:
 install.packages(c(
   "shiny", "bslib", "DBI", "RSQLite", "magick",
   "shinyFiles", "shinyjs", "jsonlite", "ggplot2",
@@ -38,21 +59,13 @@ install.packages(c(
   "scales", "colourpicker", "base64enc", "fs"
 ))
 
-# Run from the shinylabel/ directory
-shiny::runApp("app.R")
+shiny::runApp("inst/app")
 ```
 
-### Option 2: Install as package
-```r
-# From the parent directory of shinylabel/
-devtools::install("shinylabel")
-library(shinylabel)
-run_shinylabel()
-```
+### Team setup — shared network drive
 
-### Team Setup (shared network drive)
 ```r
-# All annotators point to the same .db file
+# All annotators point to the same .db file on a shared drive.
 run_shinylabel(
   db_path = "//yourserver/shared/project/annotations.db",
   host    = "0.0.0.0",   # expose on LAN
@@ -64,18 +77,18 @@ run_shinylabel(
 
 ## How It Works
 
-### Canvas Engine
-The annotation canvas is built with plain **HTML5 Canvas + vanilla JavaScript**
-(no external JS frameworks). Boxes are drawn with mouse events:
+### Canvas engine
+
+The annotation canvas is built with plain **HTML5 Canvas + vanilla JavaScript** (no external JS frameworks). Boxes are drawn with mouse events:
 
 - `mousedown` → start draw or select/drag
 - `mousemove` → draw ghost box or move/resize
-- `mouseup`   → finalize
+- `mouseup` → finalise
 
-Coordinates are tracked in **image pixel space** (not canvas display space),
-so zoom/scaling never affects annotation accuracy.
+Coordinates are tracked in **image pixel space** (not canvas display space), so zoom and scaling never affect annotation accuracy.
 
-### Coordinate Flow
+### Coordinate flow
+
 ```
 User draws on canvas
   ↓
@@ -85,17 +98,18 @@ Shiny.setInputValue("canvas_boxes", payload)
   ↓
 R server receives pixel coords
   ↓
-px_to_yolo_norm() converts to YOLO normalized (0-1)
+px_to_yolo_norm() converts to YOLO normalised (0–1)
   ↓
-SQLite stores both (pixel + normalized)
+SQLite stores both (pixel + normalised)
   ↓
 Export writes YOLO .txt files
 ```
 
-### YOLO Format Output
+### YOLO format output
+
 ```
 # labels/train/image001.txt
-# class_id  x_center  y_center  width  height  (all normalized 0-1)
+# class_id  x_center  y_center  width  height  (all normalised 0–1)
 0 0.523438 0.412500 0.178125 0.250000
 1 0.234375 0.687500 0.093750 0.125000
 ```
@@ -111,59 +125,71 @@ names: [person, car, animal, object]
 
 ---
 
-## Database Schema
+## Database schema
 
-```sql
+```
 images       — filepath, dimensions, status, who added
-classes      — class_id, name, color
-annotations  — bounding boxes (pixel + normalized), annotator, timestamp
+classes      — class_id, name, colour
+annotations  — bounding boxes (pixel + normalised), annotator, timestamp
 sessions     — login log per annotator
 ```
 
 ---
 
-## Keyboard Shortcuts
+## Keyboard shortcuts
 
 | Key | Action |
-|---|---|
+|-----|--------|
 | Drag | Draw new box |
 | Click box | Select |
 | Delete / Backspace | Delete selected box |
 | Ctrl+Z | Undo |
 | Escape | Deselect |
-| Arrow Left/Right | Previous/Next image |
+| Arrow Left / Right | Previous / next image |
 
 ---
 
-## Architecture (Package Structure)
+## Package structure
 
 ```
-shinylabel/
-├── app.R                  # Run without install
-├── DESCRIPTION
+ShinyLabel/
+├── DESCRIPTION                  # Package metadata & dependencies
+├── NAMESPACE                    # Exported functions (auto-generated)
+├── LICENSE.md
 ├── R/
-│   ├── db.R               # SQLite init, CRUD operations
-│   ├── export.R           # YOLO + COCO export
-│   ├── image_utils.R      # Image reading, b64 encoding, URL fetch
-│   ├── ui.R               # Shiny UI definition
-│   ├── server.R           # Shiny server logic
-│   └── run.R              # run_shinylabel() entry point
-└── www/
-    ├── css/style.css      # Dark industrial UI theme
-    └── js/
-        ├── canvas.js          # HTML5 Canvas annotation engine
-        └── shiny_handlers.js  # R↔JS message bridge
+│   ├── run.R                    # run_shinylabel() entry point
+│   ├── db.R                     # SQLite init, CRUD operations
+│   ├── export.R                 # YOLO + COCO export
+│   ├── image_utils.R            # Image reading, b64 encoding, URL fetch
+│   ├── ui.R                     # Shiny UI definition
+│   └── server.R                 # Shiny server logic
+├── inst/
+│   └── app/                     # ← app assets live here (shipped with package)
+│       ├── app.R                # Standalone entry point
+│       ├── images/              # Sample / demo images
+│       └── www/
+│           ├── css/style.css    # Dark industrial UI theme
+│           └── js/
+│               ├── canvas.js          # HTML5 Canvas annotation engine
+│               └── shiny_handlers.js  # R ↔ JS message bridge
+└── man/
+    └── figures/
+        └── logo.png
 ```
+
+> **Why `inst/app/`?**  
+> R only ships files inside `inst/` when a package is installed.  
+> Placing `app.R` and `www/` at the repo root works for cloned repos but  
+> breaks `system.file()` lookups after `install_github()`. Moving them  
+> inside `inst/app/` fixes this permanently.
 
 ---
 
-## Road to YOLOR Package Integration
+## Road to `yolor` package integration
 
-This package is designed to be the annotation front-end for a future `yolor` R package.
-The export format matches Ultralytics YOLO exactly. The planned integration:
+ShinyLabel is designed to be the annotation front-end for a future `yolor` R package. The export format matches Ultralytics YOLO exactly. Planned integration:
 
 ```r
-# Future API
 library(yolor)
 library(shinylabel)
 
@@ -179,6 +205,12 @@ model <- yolor_train(data = "dataset/data.yaml", epochs = 100)
 
 ---
 
+## Contributing
+
+Bug reports and pull requests are welcome on [GitHub](https://github.com/Lalitgis/ShinyLabel/issues).
+
+---
+
 ## License
 
-MIT
+[MIT](LICENSE.md)
